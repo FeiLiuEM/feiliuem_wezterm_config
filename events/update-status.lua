@@ -247,71 +247,42 @@ e.set_right_status = function(Config, window, pane)
   local palette = { e.fg:darken(0.15), e.fg, e.fg:lighten(0.15), e.fg:lighten(0.25) }
   local cwd, hostname = fs.get_cwd_hostname(pane, true)
 
-  --~ {{{2: battery cells
-
+  -- Simplified battery check - only show percentage
   local battery = wt.battery_info()[1]
+  local battery_text = ""
   if battery then
-    battery.charge_lvl = battery.state_of_charge * 100
-    battery.charge_lvl_round = mt.toint(mt.mround(battery.charge_lvl, 10))
-    battery.ico = icon.Bat[battery.state][tostring(battery.charge_lvl_round)]
-    battery.lvl = tonumber(floor(battery.charge_lvl + 0.5)) .. "%"
-    battery.full = ("%s %s"):format(battery.lvl, battery.ico)
-    battery.cells = { battery.full, battery.lvl, battery.ico }
-  end --~ }}}
-
-  --~ {{{2: datime cells
-
-  local time_ico = str.padl(icon.Clock[timefmt "%I"])
-  local time_cells = {
-    timefmt "%a %b %-d %H:%M" .. time_ico,
-    timefmt "%d/%m %R" .. time_ico,
-    timefmt "%R" .. time_ico,
-    time_ico,
-  } --~ }}}
-
-  --~ {{{2: cwd cells
-  local cwd_ico = str.padl(icon.Folder)
-  local cwd_cells = {
-    cwd .. cwd_ico,
-    fs.pathshortener(cwd, 4) .. cwd_ico,
-    fs.pathshortener(cwd, 2) .. cwd_ico,
-    fs.pathshortener(cwd, 1) .. cwd_ico,
-  } --~ }}}
-
-  --~ {{{2: hostname cells
-  local hostname_ico = str.padl(icon.Hostname)
-  local hostname_cells =
-    { hostname .. hostname_ico, hostname:sub(1, 1) .. hostname_ico, hostname_ico }
-  --~ }}}
-
-  local fancy_bg = Config.window_frame.active_titlebar_bg
-  local last_fg = Config.use_fancy_tab_bar and fancy_bg or e.theme.tab_bar.background
-
-  local sets = { cwd_cells, hostname_cells, time_cells }
-  if battery then
-    tinsert(sets, battery.cells)
+    battery_text = tonumber(floor(battery.state_of_charge * 100 + 0.5)) .. "%"
   end
 
-  local cells = tbl.reverse(
-    e.__find_best_fit(tbl.cartesian(sets), e.width.usable, str.width(sep.sb.right), 5)
-  )
+  -- Simplified time display
+  local time_text = timefmt "%H:%M"
+  
+  -- Simplified CWD display
+  local cwd_text = fs.pathshortener(cwd, 2)
 
-  -- Render the best fit, ensuring correct colors
-  for i = 1, #cells do
-    local cell_bg, cell_fg = palette[i], i == 1 and last_fg or palette[i - 1]
-    local rsep = sep.sb.right
-
-    rsb:append(cell_fg, cell_bg, rsep)
-    rsb:append(cell_bg, e.theme.tab_bar.background, str.pad(cells[i]), { "Bold" })
+  -- Simple concatenation instead of complex layout calculations
+  local status_text = cwd_text .. " | " .. time_text
+  if battery_text ~= "" then
+    status_text = status_text .. " | " .. battery_text
   end
+
+  rsb:append(e.fg, e.theme.tab_bar.background, status_text, { "Bold" })
 
   window:set_right_status(rsb:format())
 end -- }}}
 
----Update status event
+---Update status event - simplified for better performance
 ---@param window wt.Window Wezterm's window object
 ---@param pane   wt.Pane   Wezterm's pane object
+local last_update = 0
 wt.on("update-status", function(window, pane)
+  -- Throttle updates to reduce CPU usage
+  local now = wezterm.time()
+  if now - last_update < 0.5 then -- Update at most every 500ms
+    return
+  end
+  last_update = now
+  
   local Config, Overrides = window:effective_config(), window:get_config_overrides() or {}
   e.theme = Config.color_schemes[Overrides.color_scheme or Config.color_scheme]
   e.bg, e.fg = e.theme.background, e.theme.ansi[5]

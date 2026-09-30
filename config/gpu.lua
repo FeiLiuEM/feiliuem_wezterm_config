@@ -1,6 +1,7 @@
 local Config = {}
 
-Config.front_end = "WebGpu"
+-- Use simpler OpenGL backend instead of WebGPU for better performance
+Config.front_end = "OpenGL"
 Config.webgpu_force_fallback_adapter = false
 
 ---switch to low power mode when battery is low

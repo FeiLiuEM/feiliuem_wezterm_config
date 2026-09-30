@@ -11,14 +11,8 @@ Config.color_scheme = color.get_scheme()
 
 local theme = Config.color_schemes[Config.color_scheme]
 
-Config.background = {
-  {
-    source = { Color = theme.background },
-    width = "100%",
-    height = "100%",
-    opacity = G.opacity or 1,
-  },
-}
+-- Disable background rendering to reduce CPU usage
+Config.background = nil
 
 Config.bold_brightens_ansi_colors = "BrightAndBold"
 
@@ -32,37 +26,27 @@ Config.command_palette_fg_color = theme.background
 Config.command_palette_font_size = 14
 Config.command_palette_rows = 20
 
----cursor
-Config.cursor_blink_ease_in = "EaseIn"
-Config.cursor_blink_ease_out = "EaseOut"
-Config.cursor_blink_rate = 500
+---cursor - disable blinking to reduce CPU
+Config.cursor_blink_rate = 0
 Config.default_cursor_style = "BlinkingUnderline"
 Config.cursor_thickness = 1
 Config.force_reverse_video_cursor = true
 
-Config.enable_scroll_bar = true
+Config.enable_scroll_bar = false
 
 Config.hide_mouse_cursor_when_typing = true
 
----text blink
-Config.text_blink_ease_in = "EaseIn"
-Config.text_blink_ease_out = "EaseOut"
-Config.text_blink_rapid_ease_in = "Linear"
-Config.text_blink_rapid_ease_out = "Linear"
-Config.text_blink_rate = 500
-Config.text_blink_rate_rapid = 250
+---text blink - disable all blinking effects
+Config.text_blink_rate = 0
+Config.text_blink_rate_rapid = 0
 
----visual bell
-Config.audible_bell = "SystemBeep"
-Config.visual_bell = {
-  fade_in_function = "EaseOut",
-  fade_in_duration_ms = 200,
-  fade_out_function = "EaseIn",
-  fade_out_duration_ms = 200,
-}
+---visual bell - disable visual effects
+Config.audible_bell = "Disabled"
+Config.visual_bell = nil
 
 ---window appearance
-Config.window_padding = { left = 2, right = 2, top = 2, bottom = 1 }
+Config.window_decorations = "RESIZE"
+Config.window_padding = { left = 1, right = 1, top = 0, bottom = 0 }
 Config.integrated_title_button_alignment = "Right"
 Config.integrated_title_button_style = "Windows"
 Config.integrated_title_buttons = { "Hide", "Maximize", "Close" }

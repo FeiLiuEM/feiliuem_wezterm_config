@@ -54,4 +54,11 @@ Config.ssh_domains = {}
 -- ref: https://wezfurlong.org/wezterm/multiplexing.html#unix-domains
 Config.unix_domains = {}
 
+
+Config.initial_rows = 30
+Config.initial_cols = 91
+
+-- macOS manages window position automatically
+-- Manually position the window once and macOS will remember it
+
 return Config

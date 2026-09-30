@@ -580,7 +580,7 @@ M.key = {
   },
 
   ---@package
-  modifiers = { C = "CTRL", S = "SHIFT", W = "SUPER", M = "ALT" },
+  modifiers = { C = "CTRL", S = "SHIFT", W = "SUPER", M = "ALT", Cmd = "SUPER" },
 }
 
 ---@package
