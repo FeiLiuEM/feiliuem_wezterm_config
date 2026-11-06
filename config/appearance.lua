@@ -46,7 +46,11 @@ Config.visual_bell = nil
 
 ---window appearance
 Config.window_decorations = "RESIZE"
-Config.window_padding = { left = 1, right = 1, top = 0, bottom = 0 }
+-- macOS 27 draws much rounder window corners than before; with the old 1px/0px padding
+-- the corner arcs clipped the first/last characters of each line. WezTerm's plain numbers
+-- are *pixels*, so use explicit "pt" units to stay DPI-independent (~28 device px on retina)
+-- and keep the whole text grid clear of the corner arcs and of the traffic lights.
+Config.window_padding = { left = "14pt", right = "14pt", top = "12pt", bottom = "10pt" }
 Config.integrated_title_button_alignment = "Right"
 Config.integrated_title_button_style = "Windows"
 Config.integrated_title_buttons = { "Hide", "Maximize", "Close" }

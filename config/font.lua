@@ -55,7 +55,9 @@ Config.font = wt.font_with_fallback {
 if fs.platform().is_win then
   Config.font_size = 14
 else
-  Config.font_size = 14
+  -- 15pt on macOS: matches Ghostty's apparent size (JetBrains Mono 14pt + font-thicken
+  -- + looser line box). Hack renders noticeably lighter/narrower at the same 14pt.
+  Config.font_size = 15
 end
 
 Config.underline_position = -2.5
