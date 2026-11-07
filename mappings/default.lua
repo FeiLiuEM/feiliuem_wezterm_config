@@ -17,6 +17,9 @@ local mappings = {
   { "<C-S-Tab>", act.ActivateTabRelative(-1), "prev tab" },
   { "<M-CR>", act.ToggleFullScreen, "fullscreen" },
   { "<Cmd-C-f>", act.ToggleFullScreen, "fullscreen (macOS)" },
+  -- keyboard twin of Cmd+double-click: TUIs that grab the mouse (hermes, herdr)
+  -- swallow mouse events, so keep a keyboard path to the same window zoom
+  { "<Cmd-C-m>", act.EmitEvent "toggle-window-zoom", "maximise window" },
   { "<Cmd-c>", act.CopyTo "Clipboard", "copy" },
   { "<Cmd-v>", act.PasteFrom "Clipboard", "paste" },
   { "<Cmd-f>", act.Search "CurrentSelectionOrEmptyString", "search" },
