@@ -2,9 +2,10 @@
 ---@author sravioli
 ---@license GNU-GPLv3
 
----@diagnostic disable-next-line: undefined-field
-local act = require("wezterm").action
+local wezterm = require "wezterm"
+local act = wezterm.action
 local key = require("utils.fn").key
+local layout = require "utils.layout"
 
 local Config = {}
 
@@ -15,6 +16,7 @@ local mappings = {
   { "<C-Tab>", act.ActivateTabRelative(1), "next tab" },
   { "<C-S-Tab>", act.ActivateTabRelative(-1), "prev tab" },
   { "<M-CR>", act.ToggleFullScreen, "fullscreen" },
+  { "<Cmd-C-f>", act.ToggleFullScreen, "fullscreen (macOS)" },
   { "<Cmd-c>", act.CopyTo "Clipboard", "copy" },
   { "<Cmd-v>", act.PasteFrom "Clipboard", "paste" },
   { "<Cmd-f>", act.Search "CurrentSelectionOrEmptyString", "search" },
@@ -50,8 +52,13 @@ local mappings = {
   },
 
   ---quick split and nav
-  { '<Cmd-">', act.SplitHorizontal { domain = "CurrentPaneDomain" }, "vsplit" },
-  { "<Cmd-%>", act.SplitVertical { domain = "CurrentPaneDomain" }, "hsplit" },
+  -- NOTE: shifted symbols (", %) need SHIFT in mods or they never match,
+  -- and Cmd+Shift+5 is taken by the macOS screenshot toolbar => use Cmd+D / Cmd+Shift+D
+  { "<Cmd-d>", act.SplitHorizontal { domain = "CurrentPaneDomain" }, "split left/right" },
+  { "<Cmd-S-D>", act.SplitVertical { domain = "CurrentPaneDomain" }, "split top/bottom" },
+  -- adaptive layouts: direction + ratio computed from the pane's shape at runtime
+  { "<Cmd-CR>", wezterm.action_callback(layout.smart_split), "smart split" },
+  { "<Cmd-S-CR>", wezterm.action_callback(layout.auto_layout), "auto layout" },
   { "<Cmd-h>", act.ActivatePaneDirection "Left", "move left" },
   { "<Cmd-j>", act.ActivatePaneDirection "Down", "mode down" },
   { "<Cmd-k>", act.ActivatePaneDirection "Up", "move up" },
