@@ -35,6 +35,7 @@ local mappings = {
     "char select",
   },
   { "<Cmd-w>", act.CloseCurrentTab { confirm = true }, "close tab" },
+  { "<Cmd-M-w>", act.CloseCurrentPane { confirm = true }, "close pane" },
   { "<Cmd-q>", act.QuitApplication, "quit application" },
   { "<Cmd-z>", act.TogglePaneZoomState, "toggle zoom" },
   { "<PageUp>", act.ScrollByPage(-1), "" },
@@ -63,6 +64,11 @@ local mappings = {
   { "<Cmd-j>", act.ActivatePaneDirection "Down", "mode down" },
   { "<Cmd-k>", act.ActivatePaneDirection "Up", "move up" },
   { "<Cmd-l>", act.ActivatePaneDirection "Right", "move right" },
+  -- arrow-key navigation (no system/AeroSpace conflict: those use Ctrl / Option)
+  { "<Cmd-LeftArrow>", act.ActivatePaneDirection "Left", "focus left" },
+  { "<Cmd-DownArrow>", act.ActivatePaneDirection "Down", "focus down" },
+  { "<Cmd-UpArrow>", act.ActivatePaneDirection "Up", "focus up" },
+  { "<Cmd-RightArrow>", act.ActivatePaneDirection "Right", "focus right" },
 
   ---key tables
   { "<leader>h", act.ActivateKeyTable { name = "help_mode", one_shot = true }, "help" },
