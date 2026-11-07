@@ -102,4 +102,27 @@ for _, map_tbl in ipairs(mappings) do
   key.map(map_tbl[1], map_tbl[2], Config.keys)
 end
 
+---mouse: Cmd + double-click toggles the window between maximised (zoom, the
+---macOS "fill the screen but keep the menu bar" state) and its previous size.
+local zoomed = {}
+
+wezterm.on("toggle-window-zoom", function(window, _)
+  local id = window:window_id()
+  if zoomed[id] then
+    window:restore()
+    zoomed[id] = nil
+  else
+    window:maximize()
+    zoomed[id] = true
+  end
+end)
+
+Config.mouse_bindings = {
+  {
+    event = { Down = { streak = 2, button = "Left" } },
+    mods = "SUPER",
+    action = act.EmitEvent "toggle-window-zoom",
+  },
+}
+
 return Config
