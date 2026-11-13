@@ -274,11 +274,12 @@ end -- }}}
 ---Update status event - simplified for better performance
 ---@param window wt.Window Wezterm's window object
 ---@param pane   wt.Pane   Wezterm's pane object
-local last_update = 0
+local last_update = nil
 wt.on("update-status", function(window, pane)
-  -- Throttle updates to reduce CPU usage
-  local now = wezterm.time()
-  if now - last_update < 0.5 then -- Update at most every 500ms
+  -- Throttle updates to reduce CPU usage. `wezterm.time()` is not callable in current
+  -- releases (`wezterm.time` is a namespace table), so use whole-second resolution.
+  local now = os.time()
+  if last_update == now then -- update-status fires ~10x/s; render at most once per second
     return
   end
   last_update = now
