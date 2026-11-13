@@ -50,6 +50,9 @@ Config.font = wt.font_with_fallback {
   },
   { family = "Noto Color Emoji" },
   { family = "LegacyComputing" },
+  -- Linux hosts: CJK 字形没有等宽字体可用，显式给出无衬线中文，避免 fontconfig
+  -- 默认落到 Noto Serif CJK（衬线）。macOS 上若没有该字体，WezTerm 会静默跳过。
+  { family = "Noto Sans CJK SC" },
 }
 
 if fs.platform().is_win then
